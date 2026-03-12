@@ -1,0 +1,13 @@
+{
+    "watch": [
+        "server.js",
+        "database.js"
+    ],
+    "ignore": [
+        "public/*",
+        "node_modules/*",
+        "*.db"
+    ],
+    "ext": "js,json",
+    "delay": 500
+}

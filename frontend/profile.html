@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Callme Grocery</title>
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0076d7;
+            --primary-dark: #005bb5;
+            --bg-light: #f8f9fa;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            min-height: 80vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .user-brief {
+            text-align: center;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: #e0f2fe;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            font-weight: 600;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem;
+            color: var(--text-gray);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #eff6ff;
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .dashboard-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eff6ff;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #1f2937;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(0, 118, 215, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0076d7 0%, #0065b8 100%);
+            color: white;
+            padding: 0.9rem 2.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 118, 215, 0.2);
+            font-size: 0.95rem;
+            letter-spacing: 0.025em;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 8px -1px rgba(0, 118, 215, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Address Cards */
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .address-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .address-type {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .address-actions {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .btn-text.delete {
+            color: #dc2626;
+        }
+
+        /* Order Cards */
+        .order-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .order-date {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bar */
+        .order-progress {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .progress-line-fill {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            height: 2px;
+            background: #10b981;
+            z-index: 1;
+            transition: width 0.3s;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+            width: 25%;
+        }
+
+        .step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .progress-step.active .step-circle {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .progress-step.completed .step-circle {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                margin-bottom: 1rem;
+            }
+
+            .step-label {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(-10px);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Simple Header -->
+    <header class="jd-header">
+        <div class="jd-main-header">
+            <div class="jd-container" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="jd-logo">
+                    <a href="index.html" class="jd-logo-text">Call<span>me</span></a>
+                </div>
+                <a href="index.html" class="jd-nav-item">← Back to Store</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="user-brief">
+                <div class="user-avatar" id="avatar-initials">U</div>
+                <h3 id="sidebar-name">Loading...</h3>
+                <p style="font-size:0.9rem; color:var(--text-gray);" id="sidebar-phone">...</p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" onclick="showSection('profile', this)" class="active">👤 My Profile</a></li>
+                <li><a href="#" onclick="showSection('orders', this)">📦 My Orders</a></li>
+                <li><a href="#" onclick="showSection('address', this)">📍 Manage Addresses</a></li>
+                <li style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <a href="#" onclick="handleLogout()" style="color:#ef4444;">🚪 Logout</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-content">
+
+            <!-- PROFILE SECTION -->
+            <div id="profile" class="tab-panel active">
+                <div style="max-width: 800px;">
+                    <h2 class="section-title">Personal Information</h2>
+                    <p style="color:var(--text-gray); margin-bottom:2rem;">Manage your personal details and contact
+                        information.</p>
+                    <form id="profile-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="p-name" class="form-control" required
+                                    placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="p-email" class="form-control" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="p-phone" class="form-control"
+                                    placeholder="Enter your phone number">
+                            </div>
+                        </div>
+                        <div
+                            style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #f3f4f6; text-align:right;">
+                            <button type="submit" class="btn-primary" style="margin:0;">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ORDERS SECTION -->
+            <div id="orders" class="tab-panel">
+                <h2 class="section-title">Order History</h2>
+                <div id="orders-list">
+                    <p style="text-align:center; color:var(--text-gray);">Loading orders...</p>
+                </div>
+            </div>
+
+            <!-- ADDRESS SECTION -->
+            <div id="address" class="tab-panel">
+                <h2 class="section-title">Manage Addresses</h2>
+                <div id="address-list" class="address-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <h3 style="margin:2rem 0 1rem;">Add New Address</h3>
+                <form id="address-form" style="background:#f8f9fa; padding:1.5rem; border-radius:8px;">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="addr-name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="addr-phone" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:1rem;">
+                        <label>Address Line</label>
+                        <input type="text" id="addr-line" class="form-control" placeholder="House No, Building, Street"
+                            required>
+                    </div>
+                    <div class="form-grid" style="margin-top:1rem;">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="addr-city" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>State</label>
+                            <input type="text" id="addr-state" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pincode</label>
+                            <input type="text" id="addr-pincode" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Address Type</label>
+                            <select id="addr-type" class="form-control">
+                                <option value="home">Home</option>
+                                <option value="office">Office</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Add Address</button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        let currentUser = null;
+
+        // --- Init ---
+        loadProfile();
+
+        // --- Navigation ---
+        function showSection(id, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (id === 'orders') loadOrders();
+            if (id === 'address') loadAddresses();
+        }
+
+        // --- Profile Handler ---
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/auth/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (res.status === 401 || res.status === 403) {
+                    throw new Error('Session expired');
+                }
+                if (!res.ok) throw new Error('Failed to load profile');
+
+                const user = await res.json();
+                currentUser = user;
+
+                // Update Sidebar
+                document.getElementById('sidebar-name').textContent = user.name;
+                document.getElementById('sidebar-phone').textContent = user.phone || '';
+                document.getElementById('avatar-initials').textContent = user.name.charAt(0).toUpperCase();
+
+                // Update Form
+                document.getElementById('p-name').value = user.name;
+                document.getElementById('p-email').value = user.email;
+                document.getElementById('p-phone').value = user.phone;
+
+            } catch (err) {
+                console.error(err);
+                if (err.message === 'Session expired') {
+                    alert('Session expired');
+                    handleLogout();
+                }
+            }
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('p-name').value;
+            const phone = document.getElementById('p-phone').value;
+            const email = document.getElementById('p-email').value;
+
+            try {
+                const res = await fetch('/api/auth/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name, email, phone })
+                });
+
+                if (res.ok) {
+                    showToast('Profile updated successfully! ✅');
+                    loadProfile(); // refresh sidebar
+                } else {
+                    showToast('Failed to update profile ❌');
+                }
+            } catch (err) {
+                showToast('Server error ❌');
+            }
+        });
+
+        // --- Orders Handler ---
+        async function loadOrders() {
+            const container = document.getElementById('orders-list');
+            try {
+                const res = await fetch('/api/orders/my-orders', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const orders = await res.json();
+
+                if (orders.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:3rem;">
+                            <div style="font-size:3rem; margin-bottom:1rem;">🛍️</div>
+                            <h3>No orders yet</h3>
+                            <a href="index.html" class="btn-primary" style="display:inline-block; margin-top:1rem; text-decoration:none;">Start Shopping</a>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = orders.map(order => createOrderCard(order)).join('');
+            } catch (err) {
+                container.innerHTML = '<p>Error loading orders.</p>';
+            }
+        }
+
+        function createOrderCard(order) {
+            const steps = ['pending', 'confirmed', 'shipped', 'delivered'];
+            const currentStepIndex = steps.indexOf(order.status) === -1 ? 0 : steps.indexOf(order.status);
+            const isCancelled = order.status === 'cancelled';
+
+            // Progress Calculation
+            let progressHtml = '';
+            if (isCancelled) {
+                progressHtml = '<div style="background:#fee2e2; color:#dc2626; padding:0.5rem; border-radius:4px; text-align:center; font-weight:600;">❌ Order Cancelled</div>';
+            } else {
+                const widthPercent = (currentStepIndex / (steps.length - 1)) * 100;
+
+                progressHtml = `
+                <div class="order-progress">
+                    <div class="progress-line"></div>
+                    <div class="progress-line-fill" style="width: ${widthPercent}%"></div>
+                    
+                    <div class="progress-step ${currentStepIndex >= 0 ? 'active' : ''}">
+                        <div class="step-circle">${currentStepIndex > 0 ? '✓' : '1'}</div>
+                        <span class="step-label">Pending</span>
+                    </div>
+                    <div class="progress-step ${currentStepIndex >= 1 ? 'active' : ''}">
+                        <div class="step-circle">${currentStepIndex > 1 ? '✓' : '2'}</div>
+                        <span class="step-label">Confirmed</span>
+                    </div>
+                    <div class="progress-step ${currentStepIndex >= 2 ? 'active' : ''}">
+                        <div class="step-circle">${currentStepIndex > 2 ? '✓' : '3'}</div>
+                        <span class="step-label">Shipped</span>
+                    </div>
+                    <div class="progress-step ${currentStepIndex >= 3 ? 'active' : ''}">
+                        <div class="step-circle">4</div>
+                        <span class="step-label">Delivered</span>
+                    </div>
+                </div>`;
+            }
+
+            return `
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <div class="order-id">Order #${order._id.slice(-6).toUpperCase()}</div>
+                        <div class="order-date">${new Date(order.createdAt).toLocaleDateString()} at ${new Date(order.createdAt).toLocaleTimeString()}</div>
+                    </div>
+                    <div style="font-weight:700; font-size:1.1rem; color:var(--primary);">₹${order.total}</div>
+                </div>
+                
+                ${progressHtml}
+
+                <div style="margin-top:1.5rem; border-top:1px solid #f3f4f6; padding-top:1rem;">
+                    ${order.items.map(item => `
+                        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem;">
+                            <div style="width:40px; height:40px; background:#f3f4f6; border-radius:4px; overflow:hidden;">
+                                <img src="${item.image}" style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <div style="flex:1;">
+                                <div style="font-weight:500;">${item.productName}</div>
+                                <div style="font-size:0.85rem; color:var(--text-gray);">${item.unit || ''} × ${item.quantity}</div>
+                            </div>
+                            <div style="font-weight:500;">₹${item.price * item.quantity}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        // --- Address Handler ---
+        function loadAddresses() {
+            const container = document.getElementById('address-list');
+            const addresses = currentUser?.addresses || [];
+
+            if (addresses.length === 0) {
+                container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-gray);">No saved addresses.</p>';
+                return;
+            }
+
+            container.innerHTML = addresses.map((addr, index) => `
+                <div class="address-card">
+                    <span class="address-type">${addr.type}</span>
+                    ${addr.isDefault ? '<span style="font-size:0.8rem; color:green; margin-left:8px;">★ Default</span>' : ''}
+                    <div style="font-weight:600; margin-top:0.5rem;">${addr.fullName || currentUser.name}</div>
+                    <div style="color:var(--text-gray); font-size:0.9rem; margin-top:0.2rem;">${addr.phone || currentUser.phone}</div>
+                    <p style="margin-top:0.5rem; color:var(--text-dark);">
+                        ${addr.addressLine}, <br>
+                        ${addr.city}, ${addr.state} - ${addr.pincode}
+                    </p>
+                    <div class="address-actions">
+                        <button class="btn-text delete" onclick="deleteAddress(${index})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('address-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newAddr = {
+                fullName: document.getElementById('addr-name').value,
+                phone: document.getElementById('addr-phone').value,
+                addressLine: document.getElementById('addr-line').value,
+                city: document.getElementById('addr-city').value,
+                state: document.getElementById('addr-state').value,
+                pincode: document.getElementById('addr-pincode').value,
+                type: document.getElementById('addr-type').value,
+                isDefault: (currentUser.addresses || []).length === 0 // Make default if it's the first one
+            };
+
+            const updatedAddresses = [...(currentUser.addresses || []), newAddr];
+
+            try {
+                const res = await fetch('/api/auth/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ addresses: updatedAddresses })
+                });
+
+                if (res.ok) {
+                    showToast('Address added! 🏠');
+                    e.target.reset();
+                    loadProfile().then(loadAddresses); // Reload user then addresses
+                } else {
+                    showToast('Failed to add address');
+                }
+            } catch (err) {
+                showToast('Server error');
+            }
+        });
+
+        async function deleteAddress(index) {
+            if (!confirm('Are you sure you want to delete this address?')) return;
+
+            const updatedAddresses = [...currentUser.addresses];
+            updatedAddresses.splice(index, 1);
+
+            try {
+                const res = await fetch('/api/auth/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ addresses: updatedAddresses })
+                });
+
+                if (res.ok) {
+                    showToast('Address deleted');
+                    loadProfile().then(loadAddresses);
+                } else {
+                    showToast('Failed to delete address');
+                }
+            } catch (err) {
+                showToast('Server error');
+            }
+        }
+
+        // --- Utils ---
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+
+</html>

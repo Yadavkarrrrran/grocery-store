@@ -1,0 +1,687 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+}
+
+/* ============ Login Page ============ */
+.admin-login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0076d7, #00b4d8);
+}
+
+.admin-login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.admin-logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #0076d7;
+    margin-bottom: 8px;
+}
+
+.admin-logo span {
+    color: #ff9900;
+}
+
+.admin-login-subtitle {
+    color: #888;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.admin-form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.admin-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #555;
+}
+
+.admin-form-group input,
+.admin-form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.admin-form-group input:focus,
+.admin-form-group textarea:focus {
+    outline: none;
+    border-color: #0076d7;
+    box-shadow: 0 0 0 3px rgba(0, 118, 215, 0.1);
+}
+
+.btn-admin-login {
+    width: 100%;
+    padding: 12px;
+    background: #0076d7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-admin-login:hover {
+    background: #005fa3;
+}
+
+.error-msg {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+/* ============ Admin Header ============ */
+.admin-header {
+    background: white;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-logo-sm {
+    font-size: 20px;
+    font-weight: bold;
+    color: #0076d7;
+}
+
+.admin-logo-sm span {
+    color: #ff9900;
+}
+
+.admin-header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-link {
+    color: #0076d7;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-link:hover {
+    text-decoration: underline;
+}
+
+.btn-admin-logout {
+    padding: 6px 16px;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.btn-admin-logout:hover {
+    background: #cc0000;
+}
+
+/* ============ Stats Bar ============ */
+.admin-stats {
+    display: flex;
+    gap: 20px;
+    padding: 20px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0076d7;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* ============ Main Content ============ */
+.admin-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+
+.admin-section {
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.admin-section h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+/* ============ Product Form ============ */
+.product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .admin-form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-save {
+    padding: 10px 28px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-save:hover {
+    background: #218838;
+}
+
+.btn-cancel {
+    padding: 10px 28px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: #555;
+}
+
+/* ============ Products Table ============ */
+.table-container {
+    overflow-x: auto;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.products-table th {
+    background: #f8f9fa;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.products-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.products-table tr:hover {
+    background: #f8fbff;
+}
+
+.table-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.table-badge {
+    background: #e8f4fd;
+    color: #0076d7;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.price-cell {
+    font-weight: 700;
+    color: #ff9900;
+    font-size: 15px;
+}
+
+.desc-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #888;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+.btn-edit {
+    padding: 6px 12px;
+    background: #ffc107;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-right: 6px;
+    transition: background 0.2s;
+}
+
+.btn-edit:hover {
+    background: #e0a800;
+}
+
+.btn-delete {
+    padding: 6px 12px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
+/* ============ Toast ============ */
+.admin-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #28a745;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.admin-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============ Admin Tabs ============ */
+.admin-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f0f2f5;
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.admin-tab {
+    padding: 8px 20px;
+    border: none;
+    background: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.2s;
+}
+
+.admin-tab.active {
+    background: #0076d7;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 118, 215, 0.3);
+}
+
+.admin-tab:hover:not(.active) {
+    background: #e0e0e0;
+}
+
+/* ============ Orders ============ */
+.orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.orders-header h2 {
+    margin: 0 !important;
+}
+
+.btn-refresh {
+    padding: 8px 16px;
+    background: #f0f2f5;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-refresh:hover {
+    background: #e0e0e0;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.order-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.order-id-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.order-id-info strong {
+    font-size: 15px;
+    color: #333;
+}
+
+.order-date {
+    font-size: 12px;
+    color: #888;
+}
+
+.order-status-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-select {
+    padding: 6px 12px;
+    border: 2px solid;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: white;
+    outline: none;
+}
+
+.btn-delete-order {
+    padding: 6px 10px;
+    background: none;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-delete-order:hover {
+    background: #fdecea;
+    border-color: #f44336;
+}
+
+.order-card-body {
+    padding: 16px 20px;
+}
+
+.order-customer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #eee;
+}
+
+.customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.customer-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.customer-phone {
+    font-size: 13px;
+    color: #666;
+}
+
+.customer-address {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: right;
+    font-size: 13px;
+    color: #555;
+}
+
+.addr-text {
+    font-size: 12px;
+    color: #888;
+    max-width: 280px;
+}
+
+.order-items-list {
+    margin-bottom: 12px;
+}
+
+.order-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.order-item-row:last-child {
+    border-bottom: none;
+}
+
+.order-item-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.order-item-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+}
+
+.order-item-unit {
+    font-size: 11px;
+    color: #0076d7;
+    background: #e8f4fd;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.order-item-qty {
+    font-size: 13px;
+    color: #888;
+    font-weight: 600;
+}
+
+.order-item-price {
+    font-weight: 700;
+    font-size: 13px;
+    color: #333;
+    min-width: 55px;
+    text-align: right;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.order-payment {
+    font-size: 13px;
+    color: #555;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.order-totals {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-size: 13px;
+    color: #888;
+}
+
+.order-totals strong {
+    font-size: 15px;
+    color: #0076d7;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .admin-stats {
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        min-width: calc(50% - 10px);
+    }
+
+    .admin-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .admin-header-right {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .order-customer {
+        flex-direction: column;
+    }
+
+    .customer-address {
+        text-align: left;
+    }
+
+    .order-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .order-totals {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}

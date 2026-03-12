@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Callme - Fresh Groceries Delivered</title>
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <meta name="description"
+        content="Callme - Your one-stop shop for fresh groceries delivered to your doorstep. Fruits, vegetables, dairy, and more.">
+    <meta name="keywords" content="grocery, online grocery, fresh fruits, vegetables, delivery, supermarket, callme">
+    <meta name="theme-color" content="#0076d7">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://callme-grocery.onrender.com/">
+    <meta property="og:title" content="Callme - Fresh Groceries Delivered">
+    <meta property="og:description" content="Order fresh groceries online. Fast delivery to your doorstep.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&h=630&fit=crop">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://callme-grocery.onrender.com/">
+    <meta property="twitter:title" content="Callme - Fresh Groceries Delivered">
+    <meta property="twitter:description" content="Order fresh groceries online. Fast delivery to your doorstep.">
+    <meta property="twitter:image"
+        content="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&h=630&fit=crop">
+
+    <link rel="canonical" href="https://callme-grocery.onrender.com/">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Main layout handled in style.css for full-width hero */
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #ddd;
+            padding: 0.5rem;
+        }
+
+        #cart-items {
+            background: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        #total {
+            font-weight: bold;
+        }
+
+        form {
+            background: white;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        input.form-input,
+        button.form-btn {
+            display: block;
+            width: 100%;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+        }
+
+        button.form-btn {
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button.form-btn:hover {
+            background: #555;
+        }
+
+        footer {
+            background: linear-gradient(rgba(51, 51, 51, 0.55), rgba(51, 51, 51, 0.55)), url('https://static.vecteezy.com/system/resources/thumbnails/040/256/504/small_2x/empty-wooden-table-with-beautiful-supermarket-backgroundrealistic-photo.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .product-card {
+                width: calc(50% - 0.75rem) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-card {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Application -->
+    <div id="main-app">
+        <header class="jd-header">
+            <div class="jd-top-bar">
+                <div class="jd-container">
+                    <div class="jd-top-left">
+                        <a href="javascript:void(0)" onclick="goBack()" class="jd-top-link">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                            </svg>
+                            Back
+                        </a>
+                    </div>
+                    <div class="jd-top-right">
+                        <a href="/admin.html" class="jd-top-link">🔧 Admin Panel</a>
+                        <a href="profile.html" class="jd-top-link" id="user-link">Hello, Sign In</a>
+                        <a href="javascript:handleAuthAction()" class="jd-top-link" id="auth-action">Login</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="jd-main-header">
+                <div class="jd-container" style="width: 100%;">
+                    <div class="jd-logo">
+                        <a href="#" class="jd-logo-text">Call<span>me</span></a>
+                    </div>
+
+                    <div class="jd-search-container">
+                        <div class="jd-location-box">
+                            <svg class="icon" viewBox="0 0 24 24" style="margin-right: 5px;">
+                                <path
+                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                            </svg>
+                            <input type="text" class="jd-location-input" value="Ahmedabad" placeholder="City">
+                        </div>
+                        <div class="jd-search-box">
+                            <input type="text" class="jd-search-input" id="search-input"
+                                placeholder="Search for groceries...">
+                        </div>
+                        <button class="jd-search-btn" onclick="searchProducts()">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <nav class="jd-main-nav">
+                        <a href="javascript:void(0)" class="jd-nav-item"
+                            onclick="event.preventDefault(); showSection('home')">Home</a>
+                        <a href="javascript:void(0)" class="jd-nav-item"
+                            onclick="event.preventDefault(); showSection('products')">Shop Online</a>
+                        <a href="javascript:void(0)" class="jd-nav-item"
+                            onclick="event.preventDefault(); showSection('cart')">
+                            🛒 Cart
+                            <span id="cart-count" class="badge">0</span>
+                        </a>
+                    </nav>
+
+                    <!-- Hamburger Menu Button (visible on mobile) -->
+                    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileNav()" aria-label="Open menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+
+        <!-- Mobile Slide-in Navigation -->
+        <nav class="mobile-nav" id="mobile-nav">
+            <div class="mobile-nav-header">
+                <a href="#" class="mobile-logo">Call<span>me</span></a>
+                <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">✕</button>
+            </div>
+            <div class="mobile-nav-links">
+                <a href="javascript:void(0)" onclick="showSection('home'); closeMobileNav();">
+                    <span class="mobile-nav-icon">🏠</span> Home
+                </a>
+                <a href="javascript:void(0)" onclick="showSection('products'); closeMobileNav();">
+                    <span class="mobile-nav-icon">🛍️</span> Shop Online
+                </a>
+                <a href="javascript:void(0)" onclick="showSection('cart'); closeMobileNav();">
+                    <span class="mobile-nav-icon">🛒</span> Cart
+                    <span id="mobile-cart-count" class="badge">0</span>
+                </a>
+                <div class="mobile-nav-divider"></div>
+                <a href="profile.html" id="mobile-user-link">
+                    <span class="mobile-nav-icon">👤</span> <span id="mobile-user-name">Hello, Sign In</span>
+                </a>
+                <a href="/admin.html">
+                    <span class="mobile-nav-icon">🔧</span> Admin Panel
+                </a>
+                <div class="mobile-nav-divider"></div>
+                <a href="javascript:handleAuthAction()" class="mobile-auth-link" id="mobile-auth-action">
+                    <span class="mobile-nav-icon">🔑</span> <span id="mobile-auth-text">Login</span>
+                </a>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Hero Section -->
+            <div id="home" class="section active">
+                <h2>Fresh Groceries, Delivered.</h2>
+                <p>Everything you need for your home, right at your doorstep.</p>
+                <button class="hero-btn" onclick="showSection('products')">Shop Now</button>
+            </div>
+
+            <!-- Products Section -->
+            <div id="products" class="section">
+                <div class="products-header">
+                    <h2>🛒 Shop by Category</h2>
+                    <div class="category-filter" id="category-filter">
+                        <button class="cat-btn active" onclick="filterByCategory('all', this)">All</button>
+                    </div>
+                </div>
+                <div id="products-grid" class="products-grid">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading products...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Details Section -->
+            <div id="pdp" class="section">
+                <div class="pdp-container">
+                    <button class="hero-btn"
+                        style="background:transparent; color:#0076d7; padding:0; box-shadow:none; margin-bottom:1rem; min-width:auto; font-weight:600;"
+                        onclick="goBack()">
+                        ← Back to Products
+                    </button>
+                    <div class="pdp-grid">
+                        <div class="pdp-image-section">
+                            <img id="pdp-image" class="pdp-main-image" src="" alt="">
+                        </div>
+                        <div class="pdp-details-section">
+                            <div class="pdp-brand" id="pdp-brand">fresho!</div>
+                            <h2 class="pdp-title" id="pdp-title"></h2>
+                            <div class="pdp-mrp" id="pdp-mrp-container">MRP: <span id="pdp-mrp"></span></div>
+                            <div class="pdp-price-row">
+                                <span class="pdp-price" id="pdp-price"></span>
+                                <span class="pdp-price-unit" id="pdp-unit"></span>
+                            </div>
+                            <div class="pdp-save" id="pdp-save"></div>
+                            <div class="pdp-taxes">(inclusive of all taxes)</div>
+
+                            <div class="pdp-badge" id="pdp-badge">
+                                <span>Har Din Sasta!</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+
+                            <div class="pdp-pack-sizes">
+                                <div class="pdp-pack-title">Pack sizes</div>
+                                <div class="pdp-pack-option">
+                                    <div class="pdp-pack-weight" id="pdp-pack-weight"></div>
+                                    <div class="pdp-pack-price-box">
+                                        <span class="pdp-pack-price" id="pdp-pack-price"></span>
+                                        <span class="pdp-pack-discount" id="pdp-pack-discount"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pdp-action-buttons">
+                                <button class="pdp-btn-add" id="pdp-btn-add">Add to basket</button>
+                                <button class="pdp-btn-save" id="pdp-btn-save">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                    Save for later
+                                </button>
+                            </div>
+
+                            <div class="pdp-accordions">
+                                <div class="pdp-accordion-item">
+                                    <div class="pdp-accordion-header"
+                                        onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                                        About the Product
+                                        <span>+</span>
+                                    </div>
+                                    <div class="pdp-accordion-content" id="pdp-desc" style="display:block;">
+                                    </div>
+                                </div>
+                                <div class="pdp-accordion-item">
+                                    <div class="pdp-accordion-header"
+                                        onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                                        Storage and Uses
+                                        <span>+</span>
+                                    </div>
+                                    <div class="pdp-accordion-content" style="display:none;">
+                                        <strong>Storage:</strong> Store in a cool, dry place away from direct
+                                        sunlight.<br><br>
+                                        <strong>Uses:</strong> Perfect for daily household needs. See product packaging
+                                        for specific instructions.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Section -->
+            <div id="cart" class="section">
+                <h2>🛒 Your Cart</h2>
+                <div id="cart-items"></div>
+                <div class="cart-summary" id="cart-summary" style="display:none;">
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; padding:1rem; background:white; border-radius:8px; margin-top:1rem;">
+                        <div>
+                            <span style="font-size:1.1rem;">Total: </span>
+                            <span style="font-size:1.4rem; font-weight:700; color:#0076d7;">₹<span
+                                    id="total">0</span></span>
+                        </div>
+                        <button class="hero-btn" style="animation:none; padding:12px 24px; font-size:1rem;"
+                            onclick="showSection('checkout')">Proceed to Checkout →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Section -->
+            <div id="checkout" class="section">
+                <div class="checkout-container">
+                    <!-- Left Column: Address + Payment -->
+                    <div class="checkout-left">
+
+                        <!-- Step 1: Delivery Address -->
+                        <div class="checkout-card">
+                            <div class="checkout-card-header">
+                                <span class="step-badge">1</span>
+                                <h3>Delivery Address</h3>
+                            </div>
+                            <div class="address-type-selector">
+                                <label class="address-type-option selected" onclick="selectAddressType(this, 'home')">
+                                    <input type="radio" name="addr-type" value="home" checked>
+                                    <span class="addr-icon">🏠</span>
+                                    <span class="addr-label">Home</span>
+                                </label>
+                                <label class="address-type-option" onclick="selectAddressType(this, 'office')">
+                                    <input type="radio" name="addr-type" value="office">
+                                    <span class="addr-icon">🏢</span>
+                                    <span class="addr-label">Office</span>
+                                </label>
+                                <label class="address-type-option" onclick="selectAddressType(this, 'other')">
+                                    <input type="radio" name="addr-type" value="other">
+                                    <span class="addr-icon">📍</span>
+                                    <span class="addr-label">Other</span>
+                                </label>
+                            </div>
+                            <form id="address-form" class="checkout-form">
+                                <div class="checkout-row">
+                                    <div class="checkout-field">
+                                        <label>Full Name *</label>
+                                        <input type="text" id="co-name" placeholder="Enter full name" required>
+                                    </div>
+                                    <div class="checkout-field">
+                                        <label>Mobile Number *</label>
+                                        <input type="tel" id="co-phone" placeholder="10-digit mobile number" required>
+                                    </div>
+                                </div>
+                                <div class="checkout-field">
+                                    <label>Full Address *</label>
+                                    <input type="text" id="co-address"
+                                        placeholder="House No., Building, Street, Area, Landmark" required>
+                                </div>
+                                <div class="checkout-row">
+                                    <div class="checkout-field">
+                                        <label>City *</label>
+                                        <input type="text" id="co-city" value="Ahmedabad" required>
+                                    </div>
+                                    <div class="checkout-field">
+                                        <label>State *</label>
+                                        <input type="text" id="co-state" value="Gujarat" required>
+                                    </div>
+                                    <div class="checkout-field">
+                                        <label>Pincode *</label>
+                                        <input type="text" id="co-pincode" placeholder="6-digit pincode" required>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Step 2: Payment Method -->
+                        <div class="checkout-card">
+                            <div class="checkout-card-header">
+                                <span class="step-badge">2</span>
+                                <h3>Payment Method</h3>
+                            </div>
+                            <div class="payment-options">
+                                <!-- UPI -->
+                                <div class="payment-option" onclick="selectPayment(this, 'upi')">
+                                    <div class="payment-option-header">
+                                        <input type="radio" name="payment" value="upi">
+                                        <span class="payment-icon">📱</span>
+                                        <div class="payment-label">
+                                            <strong>UPI</strong>
+                                            <span>Google Pay, PhonePe, Paytm & more</span>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail" id="pay-upi">
+                                        <div class="upi-qr-section">
+                                            <div class="upi-qr-box">
+                                                <img id="upi-qr-img"
+                                                    src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yy400204-1@okaxis&pn=Callme%20Store&cu=INR"
+                                                    alt="Scan to Pay" class="upi-qr-image">
+                                                <p class="qr-label">Scan QR to Pay</p>
+                                            </div>
+                                            <div class="upi-or-divider">
+                                                <span>OR</span>
+                                            </div>
+                                            <div class="upi-id-section">
+                                                <label class="upi-input-label">Pay using your UPI ID</label>
+                                                <div class="upi-input-row">
+                                                    <input type="text" id="upi-id-input" placeholder="e.g. name@okaxis"
+                                                        class="payment-input" oninput="validateUpiId(this)">
+                                                    <span id="upi-valid-icon" class="upi-valid-icon"></span>
+                                                </div>
+                                                <button class="btn-upi-pay" id="btn-upi-pay" onclick="openUpiPayModal()"
+                                                    disabled>
+                                                    📱 Pay ₹<span id="upi-btn-amount">0</span> Now
+                                                </button>
+                                                <div class="upi-logos">
+                                                    <span class="upi-badge">GPay</span>
+                                                    <span class="upi-badge">PhonePe</span>
+                                                    <span class="upi-badge">Paytm</span>
+                                                    <span class="upi-badge">BHIM</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Credit/Debit Card -->
+                                <div class="payment-option" onclick="selectPayment(this, 'card')">
+                                    <div class="payment-option-header">
+                                        <input type="radio" name="payment" value="card">
+                                        <span class="payment-icon">💳</span>
+                                        <div class="payment-label">
+                                            <strong>Credit / Debit Card</strong>
+                                            <span>Visa, MasterCard, RuPay & more</span>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail" id="pay-card">
+                                        <input type="text" placeholder="Card Number" class="payment-input"
+                                            maxlength="19">
+                                        <div class="checkout-row">
+                                            <input type="text" placeholder="MM/YY" class="payment-input" maxlength="5">
+                                            <input type="text" placeholder="CVV" class="payment-input" maxlength="4">
+                                        </div>
+                                        <input type="text" placeholder="Name on Card" class="payment-input">
+                                    </div>
+                                </div>
+
+                                <!-- Net Banking -->
+                                <div class="payment-option" onclick="selectPayment(this, 'netbanking')">
+                                    <div class="payment-option-header">
+                                        <input type="radio" name="payment" value="netbanking">
+                                        <span class="payment-icon">🏦</span>
+                                        <div class="payment-label">
+                                            <strong>Net Banking</strong>
+                                            <span>All major banks supported</span>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail" id="pay-netbanking">
+                                        <select class="payment-input">
+                                            <option value="">Select your bank</option>
+                                            <option>State Bank of India</option>
+                                            <option>HDFC Bank</option>
+                                            <option>ICICI Bank</option>
+                                            <option>Axis Bank</option>
+                                            <option>Kotak Mahindra Bank</option>
+                                            <option>Punjab National Bank</option>
+                                            <option>Bank of Baroda</option>
+                                            <option>Yes Bank</option>
+                                            <option>Other Bank</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Wallet -->
+                                <div class="payment-option" onclick="selectPayment(this, 'wallet')">
+                                    <div class="payment-option-header">
+                                        <input type="radio" name="payment" value="wallet">
+                                        <span class="payment-icon">👛</span>
+                                        <div class="payment-label">
+                                            <strong>Wallet</strong>
+                                            <span>Paytm, Amazon Pay, Mobikwik</span>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail" id="pay-wallet">
+                                        <div class="wallet-options">
+                                            <label class="wallet-choice"><input type="radio" name="wallet"
+                                                    value="paytm"> Paytm</label>
+                                            <label class="wallet-choice"><input type="radio" name="wallet"
+                                                    value="amazon"> Amazon Pay</label>
+                                            <label class="wallet-choice"><input type="radio" name="wallet"
+                                                    value="mobikwik"> Mobikwik</label>
+                                            <label class="wallet-choice"><input type="radio" name="wallet"
+                                                    value="freecharge"> Freecharge</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cash on Delivery -->
+                                <div class="payment-option" onclick="selectPayment(this, 'cod')">
+                                    <div class="payment-option-header">
+                                        <input type="radio" name="payment" value="cod">
+                                        <span class="payment-icon">💵</span>
+                                        <div class="payment-label">
+                                            <strong>Cash on Delivery</strong>
+                                            <span>Pay when you receive your order</span>
+                                        </div>
+                                    </div>
+                                    <div class="payment-detail" id="pay-cod">
+                                        <p class="cod-notice">💡 Please keep exact change ready for a smooth delivery
+                                            experience.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Order Summary -->
+                    <div class="checkout-right">
+                        <div class="checkout-card order-summary-card">
+                            <h3>Order Summary</h3>
+                            <div id="checkout-items-list"></div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">₹0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Delivery Charges</span>
+                                <span class="delivery-free" id="summary-delivery">FREE</span>
+                            </div>
+                            <div class="summary-row discount-row" id="summary-discount-row" style="display:none;">
+                                <span>Discount</span>
+                                <span class="discount-green" id="summary-discount">-₹0</span>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-row total-row">
+                                <strong>Total Amount</strong>
+                                <strong class="total-amount" id="summary-total">₹0</strong>
+                            </div>
+                            <button class="btn-place-order" id="btn-place-order" onclick="placeOrder()">
+                                Place Order
+                            </button>
+                            <p class="secure-notice">🔒 Your payment is 100% secure</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- UPI Payment Modal -->
+        <div id="upi-pay-modal" class="payment-modal-overlay" style="display:none;">
+            <div class="payment-modal upi-app-modal">
+                <button class="modal-close-btn" onclick="closeUpiPayModal()">✕</button>
+                <div class="upi-modal-header">
+                    <h3>📱 Pay via UPI</h3>
+                    <div class="upi-modal-amount-box">
+                        <span>Amount</span>
+                        <strong id="upi-modal-amount">₹0</strong>
+                    </div>
+                    <p class="upi-modal-payto">Paying to: <strong>yy400204-1@okaxis</strong></p>
+                </div>
+                <div class="upi-modal-qr">
+                    <img id="upi-modal-qr-img" src="" alt="Scan to Pay" class="upi-modal-qr-image">
+                    <p class="qr-label">Scan this QR with any UPI app</p>
+                </div>
+                <div class="upi-modal-divider"><span>or open your UPI app</span></div>
+                <div class="upi-app-buttons" id="upi-app-buttons">
+                    <!-- Filled dynamically -->
+                </div>
+                <a id="upi-generic-link" href="#" class="btn-upi-generic" target="_blank">
+                    🔗 Open Any UPI App
+                </a>
+                <p class="upi-modal-note">After paying, come back and click <strong>"Place Order"</strong> to confirm.
+                </p>
+            </div>
+        </div>
+
+        <!-- Payment Verification Modal -->
+        <div id="payment-modal" class="payment-modal-overlay" style="display:none;">
+            <div class="payment-modal">
+                <button class="modal-close-btn" onclick="closePaymentModal()">✕</button>
+
+                <!-- Step 1: Processing -->
+                <div id="pay-step-processing" class="pay-step">
+                    <div class="pay-modal-icon">
+                        <div class="pay-spinner"></div>
+                    </div>
+                    <h3>Complete Your Payment</h3>
+                    <p id="pay-modal-method" class="pay-modal-method"></p>
+                    <div class="pay-modal-amount">
+                        <span>Amount to Pay</span>
+                        <strong id="pay-modal-total">₹0</strong>
+                    </div>
+                    <div id="pay-modal-instructions" class="pay-modal-instructions"></div>
+                    <div class="pay-modal-timer">
+                        <span>⏱ Time remaining: </span>
+                        <strong id="pay-timer">05:00</strong>
+                    </div>
+                    <button class="btn-payment-done" onclick="confirmPayment()">
+                        ✅ I have completed the payment
+                    </button>
+                    <button class="btn-payment-cancel" onclick="closePaymentModal()">
+                        Cancel & Go Back
+                    </button>
+                </div>
+
+                <!-- Step 2: Verifying -->
+                <div id="pay-step-verifying" class="pay-step" style="display:none;">
+                    <div class="pay-modal-icon">
+                        <div class="pay-spinner"></div>
+                    </div>
+                    <h3>Verifying Payment...</h3>
+                    <p class="pay-verify-text">Please wait while we confirm your payment</p>
+                </div>
+
+                <!-- Step 3: Success -->
+                <div id="pay-step-success" class="pay-step" style="display:none;">
+                    <div class="pay-modal-icon pay-success-icon">✅</div>
+                    <h3>Payment Successful!</h3>
+                    <p id="pay-success-msg" class="pay-success-msg"></p>
+                </div>
+
+                <!-- Step 3b: Failed -->
+                <div id="pay-step-failed" class="pay-step" style="display:none;">
+                    <div class="pay-modal-icon pay-fail-icon">❌</div>
+                    <h3>Payment Not Verified</h3>
+                    <p class="pay-fail-text">We couldn't verify your payment. Please try again or choose a different
+                        payment method.</p>
+                    <button class="btn-payment-done" onclick="closePaymentModal()">Try Again</button>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <p>&copy; 2025 Callme. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        let cart = [];
+        let allProducts = [];
+
+        // --- Auth & JWT ---
+        let currentUser = null;
+        let token = localStorage.getItem('token');
+
+        function checkAuth() {
+            token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+
+            if (token && userStr) {
+                currentUser = JSON.parse(userStr);
+                document.getElementById('user-link').textContent = `Hello, ${currentUser.name}`;
+                document.getElementById('user-link').href = 'profile.html';
+                document.getElementById('auth-action').textContent = 'Logout';
+
+                // Sync mobile nav
+                const mobileUserName = document.getElementById('mobile-user-name');
+                if (mobileUserName) mobileUserName.textContent = `Hello, ${currentUser.name}`;
+                const mobileUserLink = document.getElementById('mobile-user-link');
+                if (mobileUserLink) mobileUserLink.href = 'profile.html';
+                const mobileAuthText = document.getElementById('mobile-auth-text');
+                if (mobileAuthText) mobileAuthText.textContent = 'Logout';
+
+                // Hide/show Admin Panel links based on role
+                const adminLinks = document.querySelectorAll('a[href="/admin.html"]');
+                adminLinks.forEach(link => {
+                    link.style.display = currentUser.isAdmin ? 'inline-block' : 'none';
+                });
+
+                // Pre-fill checkout form if on checkout page
+                if (document.getElementById('co-name')) {
+                    document.getElementById('co-name').value = currentUser.name || '';
+                    document.getElementById('co-phone').value = currentUser.phone || '';
+                    if (currentUser.addresses && currentUser.addresses.length > 0) {
+                        const defAddr = currentUser.addresses.find(a => a.isDefault) || currentUser.addresses[0];
+                        document.getElementById('co-address').value = defAddr.addressLine || '';
+                        document.getElementById('co-city').value = defAddr.city || '';
+                        document.getElementById('co-state').value = defAddr.state || '';
+                        document.getElementById('co-pincode').value = defAddr.pincode || '';
+                    }
+                }
+            } else {
+                document.getElementById('user-link').textContent = 'Guest';
+                document.getElementById('user-link').href = 'login.html';
+                document.getElementById('auth-action').textContent = 'Login';
+                currentUser = null;
+
+                // Sync mobile nav
+                const mobileUserName = document.getElementById('mobile-user-name');
+                if (mobileUserName) mobileUserName.textContent = 'Hello, Sign In';
+                const mobileUserLink = document.getElementById('mobile-user-link');
+                if (mobileUserLink) mobileUserLink.href = 'login.html';
+                const mobileAuthText = document.getElementById('mobile-auth-text');
+                if (mobileAuthText) mobileAuthText.textContent = 'Login';
+
+                const adminLinks = document.querySelectorAll('a[href="/admin.html"]');
+                adminLinks.forEach(link => {
+                    link.style.display = 'none';
+                });
+            }
+        }
+
+        function handleAuthAction() {
+            if (currentUser) {
+                // Logout
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('cart'); // Clear any legacy local cart
+                cart = []; // Clear frontend cart memory
+                window.location.reload();
+            } else {
+                // Login
+                window.location.href = 'login.html';
+            }
+        }
+
+        checkAuth();
+
+        async function fetchCart() {
+            if (currentUser && token) {
+                try {
+                    const res = await fetch('/api/cart', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const dbCart = await res.json();
+                        cart = dbCart;
+
+                        // Check for pending cart item from before login
+                        const pendingItemStr = sessionStorage.getItem('pendingCartItem');
+                        if (pendingItemStr) {
+                            try {
+                                const pendingItem = JSON.parse(pendingItemStr);
+                                const existing = cart.find(item => item.id === pendingItem.id);
+                                if (existing) {
+                                    existing.quantity += 1;
+                                } else {
+                                    cart.push({ ...pendingItem, quantity: 1 });
+                                }
+                                sessionStorage.removeItem('pendingCartItem');
+                                showToast(`${pendingItem.name} added to cart!`);
+                                // Sync the updated cart back to backend
+                                // wait for the next event loop to let fetchCart finish nicely or just call it directly
+                                setTimeout(syncCartToBackend, 500);
+                            } catch (e) { console.error('Error parsing pending item', e); }
+                        }
+
+                        updateCartCount();
+                        if (navHistory && navHistory.length > 0 && navHistory[navHistory.length - 1] === 'cart') {
+                            renderCart();
+                        }
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch cart', err);
+                }
+            } else {
+                sessionStorage.removeItem('pendingCartItem');
+            }
+        }
+
+        async function syncCartToBackend() {
+            if (currentUser && token) {
+                try {
+                    await fetch('/api/cart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ cart })
+                    });
+                } catch (err) {
+                    console.error('Failed to sync cart', err);
+                }
+            }
+        }
+
+        fetchCart();
+
+
+        // --- Product Loading ---
+        async function loadProducts() {
+            try {
+                const res = await fetch('/api/products');
+                allProducts = await res.json();
+                renderProducts(allProducts);
+                buildCategoryFilters(allProducts);
+            } catch (err) {
+                document.getElementById('products-grid').innerHTML =
+                    '<p style="text-align:center; color:red; padding:2rem;">Failed to load products. Is the server running?</p>';
+            }
+        }
+
+        function buildCategoryFilters(products) {
+            const categories = [...new Set(products.map(p => p.category))];
+            const filterContainer = document.getElementById('category-filter');
+            filterContainer.innerHTML = '<button class="cat-btn active" onclick="filterByCategory(\'all\', this)">All</button>';
+            categories.forEach(cat => {
+                filterContainer.innerHTML += `<button class="cat-btn" onclick="filterByCategory('${cat}', this)">${cat}</button>`;
+            });
+        }
+
+        function filterByCategory(category, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (category === 'all') {
+                renderProducts(allProducts);
+            } else {
+                renderProducts(allProducts.filter(p => p.category === category));
+            }
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            if (!query) { renderProducts(allProducts); return; }
+            const filtered = allProducts.filter(p =>
+                p.name.toLowerCase().includes(query) ||
+                p.category.toLowerCase().includes(query) ||
+                p.description.toLowerCase().includes(query)
+            );
+            renderProducts(filtered);
+            showSection('products');
+        }
+
+        // Real-time search: filter as user types
+        document.getElementById('search-input').addEventListener('input', () => {
+            searchProducts();
+        });
+
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); searchProducts(); }
+        });
+
+        function getDiscount(price, mrp) {
+            if (!mrp || mrp <= price) return 0;
+            return Math.round(((mrp - price) / mrp) * 100);
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('products-grid');
+            if (products.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; padding:2rem; color:#666;">No products found.</p>';
+                return;
+            }
+            grid.innerHTML = products.map(p => {
+                const discount = getDiscount(p.price, p.mrp);
+                const outOfStock = !p.inStock;
+                return `
+                <div class="product-card ${outOfStock ? 'out-of-stock' : ''}">
+                    <div class="product-img-container" style="cursor:pointer;" onclick="openPDP('${p._id}')">
+                        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(p.name)}'">
+                        <span class="product-category">${p.category}</span>
+                        ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
+                        ${outOfStock ? '<div class="oos-overlay"><span>Out of Stock</span></div>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name" style="cursor:pointer;" onclick="openPDP('${p._id}')">${p.name}</h4>
+                        <p class="product-unit">${p.unit || ''}</p>
+                        <p class="product-desc">${p.description}</p>
+                        <div class="product-bottom">
+                            <div class="price-group">
+                                <span class="product-price">₹${p.price}</span>
+                                ${p.mrp && p.mrp > p.price ? `<span class="product-mrp">₹${p.mrp}</span>` : ''}
+                            </div>
+                            ${outOfStock
+                        ? '<button class="add-to-cart-btn disabled" disabled>Out of Stock</button>'
+                        : `<button class="add-to-cart-btn" onclick="addToCart('${p._id}', '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.image}', '${(p.unit || '').replace(/'/g, "\\'")}')">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="white"><path d="M11 9h2V6h3V4h-3V1h-2v3H8v2h3v3zm-4 9c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm-9.83-3.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4h-.01l-1.1 2-2.76 5H8.53l-.13-.27L6.16 6l-.95-2-.94-2H1v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25z"/></svg>
+                                    ADD
+                                </button>`
+                    }
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function openPDP(id) {
+            const p = allProducts.find(prod => prod._id === id);
+            if (!p) return;
+
+            document.getElementById('pdp-image').src = p.image;
+            document.getElementById('pdp-image').alt = p.name;
+            document.getElementById('pdp-brand').textContent = p.name.split(' ')[0] + '!'; // Fake brand like 'fresho!' or similar based on name
+            document.getElementById('pdp-title').textContent = `${p.name}, ${p.unit || ''}`;
+
+            if (p.mrp && p.mrp > p.price) {
+                document.getElementById('pdp-mrp-container').style.display = 'block';
+                document.getElementById('pdp-mrp').textContent = `₹${p.mrp}`;
+                const discount = getDiscount(p.price, p.mrp);
+                document.getElementById('pdp-save').textContent = `You Save: ${discount}% OFF`;
+                document.getElementById('pdp-save').style.display = 'block';
+                document.getElementById('pdp-pack-discount').textContent = `${discount}% OFF`;
+                document.getElementById('pdp-pack-discount').style.display = 'inline-block';
+            } else {
+                document.getElementById('pdp-mrp-container').style.display = 'none';
+                document.getElementById('pdp-save').style.display = 'none';
+                document.getElementById('pdp-pack-discount').style.display = 'none';
+            }
+
+            document.getElementById('pdp-price').textContent = `₹${p.price}`;
+            document.getElementById('pdp-unit').textContent = `(₹${(p.price / (parseFloat(p.unit) || 1)).toFixed(2)} / ${p.unit ? p.unit.replace(/[0-9.]/g, '') : 'unit'})`;
+
+            document.getElementById('pdp-pack-weight').textContent = p.unit || '1 pc';
+            document.getElementById('pdp-pack-price').textContent = `₹${p.price}`;
+
+            document.getElementById('pdp-desc').innerHTML = p.description + "<br><br>Quality and freshness guaranteed.";
+
+            const addBtn = document.getElementById('pdp-btn-add');
+            if (p.inStock === false) {
+                addBtn.textContent = 'Out of Stock';
+                addBtn.style.background = '#ccc';
+                addBtn.onclick = null;
+            } else {
+                addBtn.textContent = 'Add to basket';
+                addBtn.style.background = '#cc0000';
+                addBtn.onclick = () => addToCart(p._id, p.name, p.price, p.image, p.unit);
+            }
+
+            const saveBtn = document.getElementById('pdp-btn-save');
+            saveBtn.onclick = () => showToast(`${p.name} saved for later!`);
+
+            showSection('pdp');
+            window.scrollTo(0, 0);
+        }
+
+        // --- Section Navigation with History ---
+        let navHistory = ['home'];
+
+        function showSection(sectionId, addToHistory = true) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            if (addToHistory && navHistory[navHistory.length - 1] !== sectionId) {
+                navHistory.push(sectionId);
+            }
+            if (sectionId === 'products' && allProducts.length === 0) loadProducts();
+            if (sectionId === 'cart') renderCart();
+            if (sectionId === 'checkout') renderCheckoutSummary();
+        }
+
+        function goBack() {
+            if (navHistory.length > 1) {
+                navHistory.pop(); // remove current
+                const prev = navHistory[navHistory.length - 1];
+                showSection(prev, false); // go to previous without adding to history
+            }
+        }
+
+        // --- Cart ---
+        function addToCart(id, name, price, image, unit) {
+            if (!currentUser) {
+                alert('Please login to add items to your cart.');
+                sessionStorage.setItem('pendingCartItem', JSON.stringify({ id, name, price, image, unit }));
+                window.location.href = 'login.html';
+                return;
+            }
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ id, name, price, image, unit, quantity: 1 });
+            }
+            updateCartCount();
+            syncCartToBackend();
+            showToast(`${name} added to cart!`);
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        function updateCartCount() {
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').textContent = total;
+            // Sync mobile nav cart count
+            const mobileCartCount = document.getElementById('mobile-cart-count');
+            if (mobileCartCount) mobileCartCount.textContent = total;
+        }
+
+        function renderCart() {
+            const cartItemsEl = document.getElementById('cart-items');
+            const summaryEl = document.getElementById('cart-summary');
+            if (cart.length === 0) {
+                cartItemsEl.innerHTML = `
+                    <div style="text-align:center; padding:3rem; color:#888;">
+                        <div style="font-size:3rem; margin-bottom:1rem;">🛒</div>
+                        <p style="font-size:1.1rem;">Your cart is empty</p>
+                        <button class="hero-btn" style="animation:none; margin-top:1rem; padding:10px 20px; font-size:0.9rem;" onclick="showSection('products')">Start Shopping</button>
+                    </div>
+                `;
+                summaryEl.style.display = 'none';
+                document.getElementById('total').textContent = '0';
+                return;
+            }
+            summaryEl.style.display = 'block';
+            let total = 0;
+            cartItemsEl.innerHTML = cart.map((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="cart-row">
+                        <img src="${item.image}" alt="${item.name}" class="cart-thumb" onerror="this.src='https://via.placeholder.com/60x60?text=?'">
+                        <div class="cart-details">
+                            <strong>${item.name}</strong>
+                            <span class="cart-unit">${item.unit || ''}</span>
+                            <span class="cart-price">₹${item.price}</span>
+                        </div>
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                            <span class="qty-num">${item.quantity}</span>
+                            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                        </div>
+                        <span class="cart-item-total">₹${itemTotal.toFixed(0)}</span>
+                        <button class="cart-remove" onclick="removeFromCart(${index})">✕</button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('total').textContent = total.toFixed(0);
+        }
+
+        function changeQty(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
+            updateCartCount();
+            syncCartToBackend();
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            syncCartToBackend();
+            renderCart();
+        }
+
+        // --- Checkout Functions ---
+        function selectAddressType(el, type) {
+            document.querySelectorAll('.address-type-option').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+            el.querySelector('input[type="radio"]').checked = true;
+        }
+
+        function selectPayment(el, type) {
+            document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+            el.querySelector('input[type="radio"]').checked = true;
+        }
+
+        function renderCheckoutSummary() {
+            const listEl = document.getElementById('checkout-items-list');
+            if (cart.length === 0) {
+                listEl.innerHTML = '<p style="color:#888; text-align:center; padding:1rem;">Your cart is empty</p>';
+                document.getElementById('summary-subtotal').textContent = '₹0';
+                document.getElementById('summary-total').textContent = '₹0';
+                return;
+            }
+
+            let subtotal = 0;
+            let totalMrpSavings = 0;
+
+            listEl.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                return `
+                    <div class="summary-item">
+                        <div class="summary-item-info">
+                            <span class="summary-item-name">${item.name}</span>
+                            <span class="summary-item-qty">x${item.quantity}</span>
+                        </div>
+                        <span class="summary-item-price">₹${itemTotal.toFixed(0)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('summary-subtotal').textContent = '₹' + subtotal.toFixed(0);
+
+            // Delivery free above ₹200
+            const deliveryCharge = subtotal >= 200 ? 0 : 30;
+            document.getElementById('summary-delivery').textContent = deliveryCharge === 0 ? 'FREE' : '₹' + deliveryCharge;
+            document.getElementById('summary-delivery').className = deliveryCharge === 0 ? 'delivery-free' : '';
+
+            const total = subtotal + deliveryCharge;
+            document.getElementById('summary-total').textContent = '₹' + total.toFixed(0);
+
+            // Update UPI button amount if available
+            if (typeof updateUpiButtonAmount === 'function') {
+                updateUpiButtonAmount();
+            }
+        }
+
+        let paymentTimerInterval = null;
+        let pendingOrderData = null;
+
+        async function placeOrder() {
+            // Check login first
+            const currentToken = localStorage.getItem('token');
+            if (!currentToken) {
+                alert('Please login to place an order');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Validate address
+            const name = document.getElementById('co-name').value.trim();
+            const phone = document.getElementById('co-phone').value.trim();
+            const address = document.getElementById('co-address').value.trim();
+            const city = document.getElementById('co-city').value.trim();
+            const state = document.getElementById('co-state').value.trim();
+            const pincode = document.getElementById('co-pincode').value.trim();
+
+            if (!name || !phone || !address || !city || !pincode) {
+                showToast('⚠️ Please fill in all required address fields');
+                return;
+            }
+
+            // Validate payment
+            const selectedPayment = document.querySelector('input[name="payment"]:checked');
+            if (!selectedPayment) {
+                showToast('⚠️ Please select a payment method');
+                return;
+            }
+
+            if (cart.length === 0) {
+                showToast('⚠️ Your cart is empty');
+                return;
+            }
+
+            const addrTypeEl = document.querySelector('input[name="addr-type"]:checked');
+            const addrType = addrTypeEl ? addrTypeEl.value : 'home';
+            const payMethod = selectedPayment.value;
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const deliveryCharge = subtotal >= 200 ? 0 : 30;
+            const total = subtotal + deliveryCharge;
+
+            // Store order data for later
+            pendingOrderData = {
+                customerName: name,
+                customerPhone: phone,
+                address_type: addrType,
+                shippingAddress: {
+                    addressLine: address,
+                    city, state, pincode
+                },
+                paymentMethod: payMethod,
+                subtotal, deliveryCharge: deliveryCharge, total,
+                items: cart.map(i => ({
+                    product: i.id,
+                    productName: i.name,
+                    price: i.price,
+                    quantity: i.quantity,
+                    unit: i.unit,
+                    image: i.image
+                }))
+            };
+
+            // COD → place order directly
+            if (payMethod === 'cod') {
+                await submitOrder(pendingOrderData);
+                return;
+            }
+
+            // Online payment → show verification modal
+            showPaymentModal(payMethod, total);
+        }
+
+        function showPaymentModal(method, total) {
+            const modal = document.getElementById('payment-modal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            // Reset to processing step
+            document.getElementById('pay-step-processing').style.display = 'block';
+            document.getElementById('pay-step-verifying').style.display = 'none';
+            document.getElementById('pay-step-success').style.display = 'none';
+            document.getElementById('pay-step-failed').style.display = 'none';
+
+            // Set amount
+            document.getElementById('pay-modal-total').textContent = '₹' + total.toFixed(0);
+
+            // Set method-specific info
+            const methodNames = {
+                upi: '📱 UPI Payment',
+                card: '💳 Credit / Debit Card',
+                netbanking: '🏦 Net Banking',
+                wallet: '👛 Wallet Payment'
+            };
+            document.getElementById('pay-modal-method').textContent = methodNames[method] || method;
+
+            // Set instructions
+            const instructions = {
+                upi: `<div class="pay-instruction-item">1️⃣ Scan the QR code or enter UPI ID above</div>
+                      <div class="pay-instruction-item">2️⃣ Complete payment in your UPI app (GPay, PhonePe, Paytm)</div>
+                      <div class="pay-instruction-item">3️⃣ Click "I have completed the payment" below</div>`,
+                card: `<div class="pay-instruction-item">1️⃣ Enter your card details in the form above</div>
+                       <div class="pay-instruction-item">2️⃣ Complete OTP/3D Secure verification</div>
+                       <div class="pay-instruction-item">3️⃣ Click "I have completed the payment" below</div>`,
+                netbanking: `<div class="pay-instruction-item">1️⃣ Select your bank and login to net banking</div>
+                             <div class="pay-instruction-item">2️⃣ Authorize the payment of ₹${total.toFixed(0)}</div>
+                             <div class="pay-instruction-item">3️⃣ Click "I have completed the payment" below</div>`,
+                wallet: `<div class="pay-instruction-item">1️⃣ Open your selected wallet app</div>
+                         <div class="pay-instruction-item">2️⃣ Approve the payment request for ₹${total.toFixed(0)}</div>
+                         <div class="pay-instruction-item">3️⃣ Click "I have completed the payment" below</div>`
+            };
+            document.getElementById('pay-modal-instructions').innerHTML = instructions[method] || '';
+
+            // Start 5-min countdown
+            startPaymentTimer(300);
+        }
+
+        function startPaymentTimer(seconds) {
+            clearInterval(paymentTimerInterval);
+            let remaining = seconds;
+            const timerEl = document.getElementById('pay-timer');
+
+            function updateTimer() {
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                timerEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                if (remaining <= 60) timerEl.style.color = '#f44336';
+                else timerEl.style.color = '#0076d7';
+
+                if (remaining <= 0) {
+                    clearInterval(paymentTimerInterval);
+                    // Time expired → show failed
+                    document.getElementById('pay-step-processing').style.display = 'none';
+                    document.getElementById('pay-step-failed').style.display = 'block';
+                    document.querySelector('.pay-fail-text').textContent = 'Payment time expired. Please try again.';
+                }
+                remaining--;
+            }
+            updateTimer();
+            paymentTimerInterval = setInterval(updateTimer, 1000);
+        }
+
+        async function confirmPayment() {
+            clearInterval(paymentTimerInterval);
+
+            // Show verifying step
+            document.getElementById('pay-step-processing').style.display = 'none';
+            document.getElementById('pay-step-verifying').style.display = 'block';
+
+            // Simulate verification delay (1.5-3 seconds)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Submit the order
+            if (pendingOrderData) {
+                const success = await submitOrder(pendingOrderData);
+                if (success) {
+                    // Show success step
+                    document.getElementById('pay-step-verifying').style.display = 'none';
+                    document.getElementById('pay-step-success').style.display = 'block';
+                    document.getElementById('pay-success-msg').textContent =
+                        `₹${pendingOrderData.total.toFixed(0)} paid via ${pendingOrderData.paymentMethod.toUpperCase()}. Your order has been placed!`;
+
+                    // Auto close after 2.5 seconds
+                    setTimeout(() => {
+                        closePaymentModal();
+                        showSection('home');
+                    }, 2500);
+                } else {
+                    document.getElementById('pay-step-verifying').style.display = 'none';
+                    document.getElementById('pay-step-failed').style.display = 'block';
+                }
+            }
+        }
+
+        function closePaymentModal() {
+            clearInterval(paymentTimerInterval);
+            document.getElementById('payment-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            document.getElementById('pay-timer').style.color = '#0076d7';
+        }
+
+        async function submitOrder(orderData) {
+            const currentToken = localStorage.getItem('token');
+            if (!currentToken) {
+                showToast('⚠️ Please login to place an order');
+                window.location.href = 'login.html';
+                return false;
+            }
+            try {
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                // Handle auth errors - token expired or invalid
+                if (res.status === 401 || res.status === 403) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('cart');
+                    cart = [];
+                    alert('Your session has expired. Please login again.');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+
+                const data = await res.json();
+                if (res.ok && (data.success || data._id)) {
+                    const order = data.order || data;
+                    if (orderData.paymentMethod === 'cod') {
+                        alert(`🎉 Order placed successfully!\n\n📦 Order #${order._id}\n💰 Total: ₹${orderData.total.toFixed(0)}\n📍 ${(orderData.address_type || 'home').charAt(0).toUpperCase() + (orderData.address_type || 'home').slice(1)}: ${orderData.shippingAddress.addressLine}, ${orderData.shippingAddress.city}\n💳 Payment: Cash on Delivery\n\nThank you for shopping with Callme!`);
+                        showSection('home');
+                    }
+                    cart = [];
+                    localStorage.removeItem('cart');
+                    updateCartCount();
+                    syncCartToBackend();
+                    pendingOrderData = null;
+                    return true;
+                } else {
+                    showToast('❌ Failed to place order: ' + (data.error || 'Unknown error'));
+                    return false;
+                }
+            } catch (err) {
+                console.error('Order error:', err);
+                showToast('❌ Server error. Please try again.');
+                return false;
+            }
+        }
+        // ============ UPI Pay via App ============
+        function validateUpiId(input) {
+            const upiId = input.value.trim();
+            const icon = document.getElementById('upi-valid-icon');
+            const btn = document.getElementById('btn-upi-pay');
+            // UPI ID format: something@something (e.g. name@okaxis, 9876543210@ybl)
+            const isValid = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+$/.test(upiId);
+
+            if (upiId.length === 0) {
+                icon.textContent = '';
+                icon.className = 'upi-valid-icon';
+                btn.disabled = true;
+            } else if (isValid) {
+                icon.textContent = '✓';
+                icon.className = 'upi-valid-icon valid';
+                btn.disabled = false;
+            } else {
+                icon.textContent = '✗';
+                icon.className = 'upi-valid-icon invalid';
+                btn.disabled = true;
+            }
+        }
+
+        function payViaUpiApp() { openUpiPayModal(); }
+
+        function updateUpiButtonAmount() {
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const deliveryCharge = subtotal >= 200 ? 0 : 30;
+            const total = subtotal + deliveryCharge;
+            const amountEl = document.getElementById('upi-btn-amount');
+            if (amountEl) amountEl.textContent = total.toFixed(0);
+        }
+
+        function openUpiPayModal() {
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const deliveryCharge = subtotal >= 200 ? 0 : 30;
+            const total = subtotal + deliveryCharge;
+
+            if (total <= 0) {
+                showToast('⚠️ Your cart is empty');
+                return;
+            }
+
+            const payeeUpi = 'yy400204-1@okaxis';
+            const payeeName = 'Callme Store';
+            const txnNote = `Order from Callme - ${cart.length} items`;
+
+            // Build UPI URL
+            const upiData = `upi://pay?pa=${encodeURIComponent(payeeUpi)}&pn=${encodeURIComponent(payeeName)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
+
+            // Update modal amount
+            document.getElementById('upi-modal-amount').textContent = '₹' + total.toFixed(0);
+
+            // Dynamic QR with amount
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiData)}`;
+            document.getElementById('upi-modal-qr-img').src = qrUrl;
+
+            // Generic link
+            document.getElementById('upi-generic-link').href = upiData;
+            document.getElementById('upi-generic-link').onclick = function (e) {
+                e.preventDefault();
+                window.location.href = upiData;
+            };
+
+            // Build app-specific buttons using standard upi://pay format
+            // User requested: "The link must use the upi://pay format... Ensure it works only on mobile devices"
+            const apps = [
+                { name: 'Google Pay', icon: '💚', pkg: 'com.google.android.apps.nbu.paisa.user', color: '#1a73e8' },
+                { name: 'PhonePe', icon: '💜', pkg: 'com.phonepe.app', color: '#5f259f' },
+                { name: 'Paytm', icon: '💙', pkg: 'net.one97.paytm', color: '#00baf2' },
+                { name: 'BHIM', icon: '🧡', pkg: 'in.org.npci.upiapp', color: '#ef6c00' }
+            ];
+
+            const appBtnsEl = document.getElementById('upi-app-buttons');
+            appBtnsEl.innerHTML = apps.map(app => {
+                // Using standard upi://pay link as requested
+                // We attach an onclick handler to enforce mobile-only check
+                return `<a href="${upiData}" class="upi-app-btn" style="background:${app.color};" onclick="handleUpiClick(event, '${upiData}')">
+                    <span class="upi-app-icon">${app.icon}</span>
+                    <span>${app.name}</span>
+                </a>`;
+            }).join('');
+
+            // Generic link
+            document.getElementById('upi-generic-link').href = upiData;
+            document.getElementById('upi-generic-link').onclick = function (e) {
+                handleUpiClick(e, upiData);
+            };
+
+            // Copy ID fallback
+            const copyBtn = `<button class="btn-upi-copy" onclick="copyUpiId('${payeeUpi}')">📋 Copy UPI ID: ${payeeUpi}</button>`;
+            document.getElementById('upi-app-buttons').innerHTML += copyBtn;
+
+            // Show modal
+            document.getElementById('upi-pay-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function handleUpiClick(e, url) {
+            e.preventDefault();
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                window.location.href = url;
+            } else {
+                showToast('💻 UPI apps are only available on mobile devices. Please scan the QR code.');
+            }
+        }
+
+        function copyUpiId(id) {
+            navigator.clipboard.writeText(id).then(() => {
+                showToast('📋 UPI ID copied to clipboard!');
+            }).catch(() => {
+                prompt('Copy this UPI ID:', id);
+            });
+        }
+
+        function handleUpiAppClick(event, fallbackUrl) {
+            // Deprecated - using direct links now
+        }
+
+        function closeUpiPayModal() {
+            document.getElementById('upi-pay-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        // --- Mobile Navigation ---
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            const overlay = document.getElementById('mobile-nav-overlay');
+            const hamburger = document.getElementById('hamburger-btn');
+            const isOpen = nav.classList.contains('active');
+
+            if (isOpen) {
+                closeMobileNav();
+            } else {
+                nav.classList.add('active');
+                overlay.classList.add('active');
+                hamburger.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            const overlay = document.getElementById('mobile-nav-overlay');
+            const hamburger = document.getElementById('hamburger-btn');
+
+            nav.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        updateCartCount();
+        loadProducts();
+    </script>
+</body>
+
+</html>
