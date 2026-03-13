@@ -53,6 +53,11 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
 
+// Google Search Console verification
+app.get("/googlef17fc53e7fdcadb8.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/googlef17fc53e7fdcadb8.html"));
+});
+
 // Connect to MongoDB
 connectDB();
 
