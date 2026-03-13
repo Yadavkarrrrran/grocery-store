@@ -58,6 +58,15 @@ app.get("/googlef17fc53e7fdcadb8.html", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/googlef17fc53e7fdcadb8.html"));
 });
 
+// SEO Files
+app.get("/robots.txt", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/robots.txt"));
+});
+
+app.get("/sitemap.xml", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/sitemap.xml"));
+});
+
 // Connect to MongoDB
 connectDB();
 
