@@ -55,15 +55,18 @@ app.get("/", (req, res) => {
 
 // Google Search Console verification
 app.get("/googlef17fc53e7fdcadb8.html", (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
     res.sendFile(path.join(__dirname, "../frontend/googlef17fc53e7fdcadb8.html"));
 });
 
 // SEO Files
 app.get("/robots.txt", (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
     res.sendFile(path.join(__dirname, "../frontend/robots.txt"));
 });
 
 app.get("/sitemap.xml", (req, res) => {
+    res.setHeader('Content-Type', 'application/xml');
     res.sendFile(path.join(__dirname, "../frontend/sitemap.xml"));
 });
 
