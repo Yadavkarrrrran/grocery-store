@@ -354,7 +354,7 @@
                 return `
                 <tr>
                     <td><small>${pId.slice(-6).toUpperCase()}</small></td>
-                    <td><img src="${p.image}" alt="${p.name}" class="table-img" onerror="this.src='https://via.placeholder.com/50x50?text=?'"></td>
+                    <td><img src="${p.image}" alt="${p.name}" class="table-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/50x50?text=?'"></td>
                     <td>
                         <strong>${p.name}</strong>
                         <div style="font-size:11px; color:#888; margin-top:2px;">${p.description || ''}</div>
@@ -674,7 +674,7 @@
                         <div class="order-items-list">
                             ${(order.items || []).map(item => `
                                 <div class="order-item-row">
-                                    <img src="${item.image}" alt="${item.productName}" class="order-item-img" onerror="this.src='https://via.placeholder.com/40?text=?'">
+                                    <img src="${item.image}" alt="${item.productName}" class="order-item-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/40?text=?'">
                                     <span class="order-item-name">${item.productName}</span>
                                     <span class="order-item-unit">${item.unit || ''}</span>
                                     <span class="order-item-qty">×${item.quantity}</span>

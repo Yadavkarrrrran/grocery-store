@@ -884,7 +884,7 @@
                 return `
                 <div class="product-card ${outOfStock ? 'out-of-stock' : ''}">
                     <div class="product-img-container" style="cursor:pointer;" onclick="openPDP('${p._id}')">
-                        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(p.name)}'">
+                        <img src="${p.image}" alt="${p.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(p.name)}'">
                         <span class="product-category">${p.category}</span>
                         ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
                         ${outOfStock ? '<div class="oos-overlay"><span>Out of Stock</span></div>' : ''}
@@ -1044,7 +1044,7 @@
                 total += itemTotal;
                 return `
                     <div class="cart-row">
-                        <img src="${item.image}" alt="${item.name}" class="cart-thumb" onerror="this.src='https://via.placeholder.com/60x60?text=?'">
+                        <img src="${item.image}" alt="${item.name}" class="cart-thumb" onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=?'">
                         <div class="cart-details">
                             <strong>${item.name}</strong>
                             <span class="cart-unit">${item.unit || ''}</span>
