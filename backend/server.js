@@ -118,7 +118,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
             folder: 'callme-grocery',
             resource_type: 'image',
             transformation: [
-                { width: 400, height: 300, crop: 'fill', quality: 'auto' }
+                { width: 800, height: 800, crop: 'limit', quality: 'auto' }
             ]
         });
 
