@@ -270,6 +270,8 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
+    table-layout: fixed;
+    /* Fix for shaking: prevent table from recalculating layout as images load */
 }
 
 .products-table th {
@@ -297,7 +299,32 @@ body {
     height: 50px;
     object-fit: cover;
     border-radius: 8px;
+    background: #f0f0f0;
+    /* Placeholder background */
+    display: block;
 }
+
+/* Specific column widths to prevent shaking */
+.products-table th:nth-child(1) {
+    width: 80px;
+}
+
+/* ID */
+.products-table th:nth-child(2) {
+    width: 70px;
+}
+
+/* Image */
+.products-table th:nth-child(4) {
+    width: 150px;
+}
+
+/* Category */
+.products-table th:nth-child(10) {
+    width: 130px;
+}
+
+/* Actions */
 
 .table-badge {
     background: #e8f4fd;
@@ -642,8 +669,13 @@ body {
 }
 
 @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .rotating {
@@ -652,10 +684,11 @@ body {
 }
 
 .rotating::before {
-    content: '';
+    content: '🔄';
     display: inline-block;
     animation: rotate 1s linear infinite;
-    margin-right: 5px;
+    margin-right: 8px;
+    font-size: 14px;
 }
 
 /* ============ Responsive ============ */
