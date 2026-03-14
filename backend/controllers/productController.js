@@ -3,6 +3,10 @@ const Product = require('../models/Product');
 // Get all products
 const getProducts = async (req, res) => {
     try {
+        const mongoose = require('mongoose');
+        if (mongoose.connection.readyState !== 1) {
+            return res.json([]); // Return empty if DB disconnected
+        }
         const products = await Product.find();
         res.json(products);
     } catch (err) {

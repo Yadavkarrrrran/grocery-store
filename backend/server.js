@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
 
 // Config
 const connectDB = require('./config/db');
@@ -15,13 +16,28 @@ const seedProducts = require('./seedData');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists (for temporary multer storage)
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Configure multer storage
+// Configure Cloudinary (auto-configures from CLOUDINARY_URL env var)
+if (process.env.CLOUDINARY_URL) {
+    cloudinary.config(); // Auto-reads CLOUDINARY_URL
+    console.log('☁️ Cloudinary configured from CLOUDINARY_URL');
+} else if (process.env.CLOUDINARY_CLOUD_NAME) {
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+    console.log('☁️ Cloudinary configured from individual env vars');
+} else {
+    console.warn('⚠️ Cloudinary not configured! Image uploads will fail.');
+}
+
+// Configure multer storage (temporary disk storage before uploading to Cloudinary)
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, uploadDir);
@@ -88,17 +104,89 @@ async function seedDatabase() {
 }
 seedDatabase();
 
-// Image Upload Endpoint
-app.post('/api/upload', upload.single('file'), (req, res) => {
+// Image Upload Endpoint - Uses Cloudinary for permanent cloud storage
+const Image = require('./models/Image'); // Keep for backward compatibility
+
+app.post('/api/upload', upload.single('file'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        const fileUrl = `/uploads/${req.file.filename}`;
-        res.json({ secure_url: fileUrl });
+
+        // Upload to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'callme-grocery',
+            resource_type: 'image',
+            transformation: [
+                { width: 400, height: 300, crop: 'fill', quality: 'auto' }
+            ]
+        });
+
+        // Delete the temporary local file
+        fs.unlinkSync(req.file.path);
+
+        // Return the Cloudinary URL (permanent, CDN-backed)
+        res.json({ secure_url: result.secure_url });
     } catch (err) {
-        res.status(500).json({ error: 'Upload failed' });
+        console.error('Upload error:', err);
+        // Clean up temp file if it exists
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        res.status(500).json({ error: 'Upload failed: ' + err.message });
     }
+});
+
+// Backward compatibility: serve images that were previously stored in MongoDB
+app.get('/api/images/:id', async (req, res) => {
+    try {
+        const image = await Image.findById(req.params.id);
+        if (!image) {
+            return res.status(404).json({ error: 'Image not found' });
+        }
+        res.set('Content-Type', image.contentType);
+        res.set('Cache-Control', 'public, max-age=31536000');
+        res.send(image.data);
+    } catch (err) {
+        console.error('Image fetch error:', err);
+        res.status(500).json({ error: 'Error retrieving image' });
+    }
+});
+
+// Emergency Admin Fix Route
+app.get('/api/fix-admin', async (req, res) => {
+    try {
+        const User = require('./models/User');
+        const email = 'yy400204@gmail.com';
+        const password = 'admin123';
+
+        let user = await User.findOne({ email });
+        if (!user) {
+            user = new User({
+                name: 'Admin',
+                email: email,
+                password: password,
+                phone: '1234567890',
+                isAdmin: true
+            });
+        } else {
+            user.isAdmin = true;
+            user.password = password;
+        }
+        await user.save();
+        res.send('✅ Admin fixed! <br>ID: ' + email + '<br>Password: ' + password + '<br><br><a href="/admin.html">Go to Admin Login</a>');
+    } catch (err) {
+        res.status(500).send('❌ Error: ' + err.message);
+    }
+});
+
+// Health Check
+app.get('/api/health', (req, res) => {
+    const mongoose = require('mongoose');
+    res.json({
+        dbConnected: mongoose.connection.readyState === 1,
+        message: mongoose.connection.readyState === 1 ? 'Healthy' : 'Database Offline'
+    });
 });
 
 // --- API Routes ---

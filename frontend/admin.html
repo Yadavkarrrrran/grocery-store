@@ -49,6 +49,11 @@
             </div>
         </header>
 
+        <div id="db-warning"
+            style="display:none; background:#ff4757; color:white; text-align:center; padding:10px; font-weight:bold; font-size:14px;">
+            ⚠️ DATABASE OFFLINE: Data shown below might be empty or incomplete. Please fix MongoDB connection.
+        </div>
+
         <!-- Stats Bar -->
         <div class="admin-stats">
             <div class="stat-card">
@@ -146,7 +151,10 @@
 
             <!-- Products Table -->
             <div class="admin-section">
-                <h2>📦 All Products</h2>
+                <div class="orders-header">
+                    <h2>📦 All Products</h2>
+                    <button class="btn-refresh btn-refresh-products" onclick="loadAdminProducts()">🔄 Refresh</button>
+                </div>
                 <div class="table-container">
                     <table class="products-table">
                         <thead>
@@ -215,8 +223,23 @@
             } else {
                 document.getElementById('admin-login').style.display = 'none';
                 document.getElementById('admin-dashboard').style.display = 'block';
+                checkDatabaseStatus();
                 loadAdminProducts();
                 loadOrders(); // Load orders immediately if logged in
+            }
+        }
+
+        async function checkDatabaseStatus() {
+            try {
+                const res = await fetch('/api/health');
+                const data = await res.json();
+                if (!data.dbConnected) {
+                    document.getElementById('db-warning').style.display = 'block';
+                } else {
+                    document.getElementById('db-warning').style.display = 'none';
+                }
+            } catch (e) {
+                document.getElementById('db-warning').style.display = 'block';
             }
         }
 
@@ -285,6 +308,11 @@
 
         // --- Load Products ---
         async function loadAdminProducts() {
+            const btn = document.querySelector('.btn-refresh-products');
+            if (btn) {
+                btn.classList.add('rotating');
+                btn.textContent = '⏳ Refreshing...';
+            }
             try {
                 // Products GET is public
                 const res = await fetch('/api/products');
@@ -295,6 +323,11 @@
                 console.error(err);
                 document.getElementById('products-tbody').innerHTML =
                     '<tr><td colspan="10" style="text-align:center; color:red;">Failed to load products</td></tr>';
+            } finally {
+                if (btn) {
+                    btn.classList.remove('rotating');
+                    btn.textContent = '🔄 Refresh';
+                }
             }
         }
 
@@ -547,6 +580,11 @@
         // --- Orders ---
 
         async function loadOrders() {
+            const btn = document.querySelector('.btn-refresh');
+            if (btn) {
+                btn.classList.add('rotating');
+                btn.textContent = '⏳ Refreshing...';
+            }
             try {
                 const res = await fetch('/api/orders', { headers: getAuthHeaders() });
                 if (checkAuthError(res)) return;
@@ -557,6 +595,11 @@
                 console.error(err);
                 document.getElementById('orders-list').innerHTML =
                     '<p style="text-align:center; color:red; padding:2rem;">Failed to load orders. Please try refreshing.</p>';
+            } finally {
+                if (btn) {
+                    btn.classList.remove('rotating');
+                    btn.textContent = '🔄 Refresh';
+                }
             }
         }
 
@@ -643,6 +686,10 @@
                         <div class="order-footer">
                             <div class="order-payment">
                                 💳 ${order.paymentMethod ? order.paymentMethod.toUpperCase() : 'COD'}
+                                ${order.paymentDetail && order.paymentDetail.refId ?
+                        `<br><small style="color:#0076d7; font-weight:600;">Ref: ${order.paymentDetail.refId}</small>` : ''}
+                                ${order.paymentStatus ?
+                        `<br><small style="color:${order.paymentStatus === 'pending_verification' ? '#ff9800' : '#4caf50'};">[${order.paymentStatus.replace('_', ' ')}]</small>` : ''}
                             </div>
                             <div class="order-totals">
                                 <span>Subtotal: ₹${order.subtotal}</span>

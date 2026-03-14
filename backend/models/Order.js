@@ -20,6 +20,11 @@ const OrderSchema = new mongoose.Schema({
         pincode: String
     },
     paymentMethod: { type: String, default: 'cod' },
+    paymentDetail: {
+        refId: String,
+        timestamp: Date
+    },
+    paymentStatus: { type: String, default: 'pending' },
     items: [OrderItemSchema],
     subtotal: Number,
     deliveryCharge: Number,

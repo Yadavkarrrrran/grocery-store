@@ -2,20 +2,30 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const User = require('./models/User');
 
-const TARGET_EMAIL = 'yy400204@gmail.com'; // User's email from screenshot
+const TARGET_EMAIL = 'yy400204@gmail.com';
+const TEMP_PASSWORD = 'admin123';
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI)
     .then(async () => {
         console.log('✅ Connected to MongoDB');
 
-        const user = await User.findOne({ email: TARGET_EMAIL });
+        let user = await User.findOne({ email: TARGET_EMAIL });
+
         if (!user) {
-            console.log(`❌ User not found: ${TARGET_EMAIL}`);
-            console.log('Please register first!');
-            process.exit(1);
+            console.log(`ℹ️ User not found. Creating new admin: ${TARGET_EMAIL}`);
+            user = new User({
+                name: 'Admin',
+                email: TARGET_EMAIL,
+                password: TEMP_PASSWORD,
+                phone: '1234567890',
+                isAdmin: true
+            });
+        } else {
+            console.log(`✅ User found: ${user.name}`);
+            user.isAdmin = true;
+            user.password = TEMP_PASSWORD; // Reset password to known one
         }
 
-        user.isAdmin = true;
         await user.save();
 
         console.log(`✅ Success! ${user.name} (${user.email}) is now an Admin.`);

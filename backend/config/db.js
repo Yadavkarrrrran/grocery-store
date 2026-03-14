@@ -14,11 +14,15 @@ const connectDB = async () => {
         const maskedUri = uri.replace(/:([^@]+)@/, ':****@');
         console.log('🔗 Connecting to MongoDB:', maskedUri);
 
-        await mongoose.connect(uri);
+        await mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 30000,
+            connectTimeoutMS: 30000
+        });
         console.log('✅ Connected to MongoDB');
     } catch (err) {
-        console.error('❌ MongoDB Connection Error:', err);
-        process.exit(1);
+        console.error('❌ MongoDB Connection Error:', err.message);
+        console.error('Stack trace:', err.stack);
+        // Do not exit, allow server to stay alive for troubleshooting
     }
 };
 

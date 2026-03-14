@@ -620,6 +620,17 @@
                         <span>⏱ Time remaining: </span>
                         <strong id="pay-timer">05:00</strong>
                     </div>
+
+                    <!-- NEW: Transaction ID Field -->
+                    <div class="pay-modal-input-group" style="margin: 1.5rem 0; text-align: left;">
+                        <label style="display:block; margin-bottom:0.5rem; font-weight:600; font-size:14px;">Transaction
+                            Reference ID / UPI Ref No. *</label>
+                        <input type="text" id="pay-ref-id" placeholder="Enter 12-digit Ref No. or Transaction ID"
+                            style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; transition: border-color 0.3s;">
+                        <span id="pay-ref-error" style="color:#f44336; font-size:12px; display:none; margin-top:4px;">⚠️
+                            Please enter a valid Transaction ID</span>
+                    </div>
+
                     <button class="btn-payment-done" onclick="confirmPayment()">
                         ✅ I have completed the payment
                     </button>
@@ -1267,11 +1278,28 @@
         }
 
         async function confirmPayment() {
+            const refId = document.getElementById('pay-ref-id').value.trim();
+            const refErr = document.getElementById('pay-ref-error');
+
+            if (!refId || refId.length < 6) {
+                refErr.style.display = 'block';
+                document.getElementById('pay-ref-id').style.borderColor = '#f44336';
+                return;
+            }
+
+            refErr.style.display = 'none';
+            document.getElementById('pay-ref-id').style.borderColor = '#ddd';
             clearInterval(paymentTimerInterval);
 
             // Show verifying step
             document.getElementById('pay-step-processing').style.display = 'none';
             document.getElementById('pay-step-verifying').style.display = 'block';
+
+            // Store the ref id in the order data
+            if (pendingOrderData) {
+                pendingOrderData.paymentDetail = { refId: refId, timestamp: new Date().toISOString() };
+                pendingOrderData.paymentStatus = 'pending_verification';
+            }
 
             // Simulate verification delay (1.5-3 seconds)
             await new Promise(resolve => setTimeout(resolve, 2000));

@@ -3,7 +3,7 @@ const Order = require('../models/Order');
 // Create order
 const createOrder = async (req, res) => {
     try {
-        const { items, total, shippingAddress, customerName, customerPhone, paymentMethod, subtotal, deliveryCharge } = req.body;
+        const { items, total, shippingAddress, customerName, customerPhone, paymentMethod, subtotal, deliveryCharge, paymentDetail, paymentStatus } = req.body;
         const newOrder = new Order({
             user: req.user.id,
             customerName: customerName || 'N/A',
@@ -13,7 +13,9 @@ const createOrder = async (req, res) => {
             deliveryCharge: deliveryCharge || 0,
             total,
             shippingAddress,
-            paymentMethod: paymentMethod || 'cod'
+            paymentMethod: paymentMethod || 'cod',
+            paymentDetail,
+            paymentStatus: paymentStatus || (paymentMethod === 'cod' ? 'pending' : 'pending_verification')
         });
         await newOrder.save();
         res.status(201).json({ success: true, order: newOrder });
@@ -35,6 +37,10 @@ const getMyOrders = async (req, res) => {
 // Admin: Get all orders
 const getAllOrders = async (req, res) => {
     try {
+        const mongoose = require('mongoose');
+        if (mongoose.connection.readyState !== 1) {
+            return res.json([]); // Return empty if DB disconnected
+        }
         const orders = await Order.find().populate('user', 'name email').sort({ createdAt: -1 });
         res.json(orders);
     } catch (err) {
@@ -53,9 +59,20 @@ const updateOrderStatus = async (req, res) => {
     }
 };
 
+// Admin: Delete order
+const deleteOrder = async (req, res) => {
+    try {
+        await Order.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Order deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 module.exports = {
     createOrder,
     getMyOrders,
     getAllOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    deleteOrder
 };

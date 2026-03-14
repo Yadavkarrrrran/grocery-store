@@ -1,11 +1,18 @@
 {
     "watch": [
         "server.js",
-        "database.js"
+        "config/",
+        "controllers/",
+        "middleware/",
+        "routes/",
+        "services/",
+        "models/",
+        "seedData.js"
     ],
     "ignore": [
         "public/*",
         "node_modules/*",
+        "uploads/*",
         "*.db"
     ],
     "ext": "js,json",
